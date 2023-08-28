@@ -1,0 +1,32 @@
+{
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "env": {
+        "node": true, 
+        "browser": true,
+        "es6": true,
+        "jquery": true
+    },
+    "globals": {
+        "csser": true,
+        "cssjs": true
+    },
+    "rules": {
+        "no-var": "error",
+        "comma-dangle": [
+            "off",
+            "only-multiline"
+        ],
+        "no-unused-vars": [
+            "error",
+            {
+                "vars": "local",
+                "args": "none",
+                "varsIgnorePattern": "[A-Z_]{1,}"
+            }
+        ]
+    }
+}

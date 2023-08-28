@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confettiCanvas"></canvas>
+  <button id="startButton">Start Confetti</button>
+
+  <script>
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    const startButton = document.getElementById('startButton');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ['#f44336', '#ff9800', '#ffc107', '#4caf50', '#2196f3', '#9c27b0'];
+
+    function createConfettiParticle() {
+      const size = Math.random() * 10 + 5;
+      const x = Math.random() * canvas.width;
+      const y = -size;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 1 + Math.random() * 3;
+      return { x, y, size, color, angle, velocity };
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      confettiParticles.forEach(particle => {
+        particle.y += particle.velocity;
+        particle.x += Math.sin(particle.angle) * 2;
+
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+      });
+
+      confettiParticles = confettiParticles.filter(particle => particle.y < canvas.height);
+
+      requestAnimationFrame(animateConfetti);
+    }
+
+    let confettiParticles = [];
+
+    startButton.addEventListener('click', () => {
+      for (let i = 0; i < 100; i++) {
+        confettiParticles.push(createConfettiParticle());
+      }
+      animateConfetti();
+    });
+  </script>
+</body>
+</html>
