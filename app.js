@@ -61,7 +61,13 @@ app.use((req, res) => {
 });
 
 // Connect to the MongoDB Atlas cloud storage
-const databaseUrl = process.env.DB_URL_DEVELOPMENT; 
+let databaseUrl;
+
+if (process.env.APP_MODE === 'development') {
+    databaseUrl = process.env.DB_URL_DEVELOPMENT;
+} else if (process.env.APP_MODE === 'production') {
+    databaseUrl = process.env.DB_URL_PRODUCTION;
+}
 console.log(`Trying to connect to mongodb ${databaseUrl}...`);
 
 const mongoDbConfig = {
@@ -69,13 +75,13 @@ const mongoDbConfig = {
 };
 
 mongoose.connect(databaseUrl, mongoDbConfig)
-.then(() => {
-    console.log("Connected to mongodb.")
-    // Start the server
-    const port = process.env.PORT || 4400;
-    app.listen(port, () => {
-        console.log(`Listining to port ${port}.`);
-    });
+    .then(() => {
+        console.log("Connected to mongodb.")
+        // Start the server
+        const port = process.env.PORT || 4400;
+        app.listen(port, () => {
+            console.log(`Listining to port ${port}.`);
+        });
 
-})
-.catch((err) => console.log("Could not connect to mongodb. Server did not start.", err));
+    })
+    .catch((err) => console.log("Could not connect to mongodb. Server did not start.", err));
