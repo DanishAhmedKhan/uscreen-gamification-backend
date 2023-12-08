@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const response = require('../helpers/response.js')
 
 module.exports = (req, res, next) => {
     const token = req.header('x-auth-token');
@@ -12,6 +13,6 @@ module.exports = (req, res, next) => {
         req['user'] = decoded;
         next();
     } catch (e) {
-        res.status(401).send('Invalid token.');
+        response.error(req, res, 'Invalid token.', 401)
     }
 };

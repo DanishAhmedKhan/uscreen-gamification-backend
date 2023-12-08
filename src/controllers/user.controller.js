@@ -34,3 +34,13 @@ module.exports.getData = async (req, res) => {
         data: user.data
     });
 };
+
+module.exports.getLeaderboard = async (req, res) => {
+    let user = await User.find({ productId: req.body.productId })
+        .sort({ 'data.point': -1 })
+        .limit(10)
+
+    response.success(req, res, {
+        data: user,
+    })
+}
