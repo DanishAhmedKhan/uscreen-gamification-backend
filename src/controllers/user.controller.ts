@@ -1,11 +1,14 @@
-const User = require("../models/User.js");
-const response = require("../helpers/response.js");
+import User from "../models/User";
+import response from "../helpers/response";
+// Types
+import { Request, Response } from "express";
+import { IAuthenticatedRequest } from "../@types/user";
 
-module.exports.loginUser = async (req, res) => {
+export const loginUserController = async (req: Request, res: Response) => {
    const { userId, productId, platform } = req.body;
    const user = await User.findOne({ userId, productId, platform });
 
-   if (!user) await this.addUser(req, res);
+   if (!user) await addUserController(req, res);
 
    let authToken = user?.generateAuthToken();
    res.setHeader("x-auth-token", authToken);
@@ -16,7 +19,7 @@ module.exports.loginUser = async (req, res) => {
    });
 };
 
-module.exports.addUser = async (req, res) => {
+export const addUserController = async (req: Request, res: Response) => {
    let { platform, userId, productId } = req.body;
 
    let user = await User.findOne({ platform, userId, productId });
@@ -36,15 +39,18 @@ module.exports.addUser = async (req, res) => {
    });
 };
 
-module.exports.addData = async (req, res) => {
+export const addDataController = async (req: IAuthenticatedRequest, res: Response) => {
    let user = await User.findOne({ _id: req.user._id });
-   user.data = req.body.data;
+   user.data = {
+      ...user.data,
+      ...(req.body.data as object),
+   };
    await user.save();
 
    response.success(req, res, "User data added");
 };
 
-module.exports.getData = async (req, res) => {
+export const getDataController = async (req: IAuthenticatedRequest, res: Response) => {
    let user = await User.findOne({ _id: req.user._id });
 
    response.success(req, res, {
@@ -52,7 +58,7 @@ module.exports.getData = async (req, res) => {
    });
 };
 
-module.exports.getLeaderboard = async (req, res) => {
+export const getLeaderboardController = async (req: Request, res: Response) => {
    let user = await User.find({ productId: req.body.productId })
       .sort({ "data.point": -1 })
       .limit(10);

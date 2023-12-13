@@ -1,7 +1,13 @@
-const Joi = require("joi");
-const response = require("../helpers/response.js");
+import Joi, { PartialSchemaMap, Schema } from "joi";
+import response from "../helpers/response";
+import { NextFunction, Request, Response } from "express";
 
-const validate = (req, res, next, joiSchema) => {
+const validate = (
+   req: Request,
+   res: Response,
+   next?: NextFunction,
+   joiSchema?: PartialSchemaMap<unknown>
+) => {
    const schema = Joi.object().keys(joiSchema);
 
    const { error } = schema.validate(req.body, {
@@ -22,4 +28,4 @@ const validate = (req, res, next, joiSchema) => {
    next();
 };
 
-module.exports = validate;
+export default validate;

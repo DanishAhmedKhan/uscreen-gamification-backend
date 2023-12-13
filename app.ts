@@ -1,12 +1,14 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const morgan = require("morgan");
-const helmet = require("helmet");
-const cors = require("cors");
-const ip = require("ip");
-const path = require("path");
+import mongoose, { ConnectOptions } from "mongoose";
+import express from "express";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import morgan from "morgan";
+import helmet from "helmet";
+import cors from "cors";
+import ip from "ip";
+import path from "path";
+// Routes
+import user from "./src/routes/user.route";
 
 // Add all environment variables
 dotenv.config();
@@ -50,7 +52,6 @@ if (appMode === "production") {
 app.use(express.static(path.join(__dirname, "src/public")));
 
 // Add all api
-const user = require("./src/routes/user.route.js");
 app.use("/api", user);
 
 // 404 page/api not found
@@ -59,7 +60,7 @@ app.use((req, res) => {
 });
 
 // Connect to the MongoDB Atlas cloud storage
-let databaseUrl;
+let databaseUrl = "";
 
 if (process.env.APP_MODE === "development") {
    databaseUrl = process.env.DB_URL_DEVELOPMENT;
@@ -70,7 +71,7 @@ console.log(`Trying to connect to mongodb ${databaseUrl}...`);
 
 const mongoDbConfig = {
    serverSelectionTimeoutMS: 5000,
-};
+} as ConnectOptions;
 
 mongoose
    .connect(databaseUrl, mongoDbConfig)
